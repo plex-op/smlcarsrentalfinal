@@ -89,7 +89,7 @@ function Cars() {
   }
 
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 py-16">
         <div className="container mx-auto px-6 text-center">
