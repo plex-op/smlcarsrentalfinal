@@ -1,4 +1,4 @@
-// server.js — Final fixed version
+// server.js — Fixed version
 require("dotenv").config();
 
 const express = require("express");
@@ -42,7 +42,7 @@ app.use(cors());
 app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ extended: true, limit: "15mb" }));
 
-/* ====== Multer (temp uploads) ====== */
+/* ====== Multer (temp uploads to disk) ====== */
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
@@ -70,23 +70,33 @@ const requireAuth = (req, res, next) => {
 };
 
 /* ====== Helpers ====== */
+// Improved upload helper with explicit error logging
 async function uploadOneToAppwrite(filePath, fileName) {
   if (!fs.existsSync(filePath)) throw new Error(`File not found: ${filePath}`);
 
   const stream = fs.createReadStream(filePath);
 
-  // ✅ Upload file with public read permission
-  const uploaded = await storage.createFile(
-    BUCKET_ID,
-    ID.unique(),
-    stream,
-    [Permission.read("any")] // 👈 important!
-  );
+  try {
+    // Upload file with public read permission (Permission.read("any"))
+    const uploaded = await storage.createFile(
+      BUCKET_ID,
+      ID.unique(),
+      stream,
+      [Permission.read("any")]
+    );
 
-  // ✅ Use Appwrite's public "view" endpoint
-  const fileUrl = `${APPWRITE_ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${uploaded.$id}/view?project=${APPWRITE_PROJECT}`;
+    const fileUrl = `${APPWRITE_ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${uploaded.$id}/view?project=${APPWRITE_PROJECT}`;
 
-  return { id: uploaded.$id, url: fileUrl, name: fileName };
+    return { id: uploaded.$id, url: fileUrl, name: fileName };
+  } catch (err) {
+    // Log the full error for debugging (Appwrite SDK often returns nested error info)
+    console.error("Appwrite upload error for", fileName, ":", err && err.message ? err.message : err);
+    // rethrow so caller can record failure per-file
+    throw err;
+  } finally {
+    // Ensure stream is closed
+    try { stream.destroy(); } catch (_) { /* ignore */ }
+  }
 }
 
 function cleanupFiles(files) {
@@ -139,8 +149,8 @@ app.get("/api/profile", requireAuth, (req, res) => {
 
 // Add debug upload-test endpoint
 app.get("/api/debug/upload-test", (req, res) => {
-  res.json({ 
-    success: true, 
+  res.json({
+    success: true,
     message: 'Upload endpoint is working!',
     timestamp: new Date().toISOString()
   });
@@ -188,11 +198,10 @@ app.post("/api/cars", requireAuth, async (req, res) => {
   try {
     const { brand, model, year, price, fuelType, imageUrl, images, mileage, color, transmission, owners, type, seatingCapacity, location, available, features } = req.body || {};
 
-    // Enhanced validation with all required fields
     if (!brand || !model || !year || !price || !fuelType) {
-      return res.status(400).json({ 
-        success: false, 
-        error: "Missing required fields (brand, model, year, price, fuelType)" 
+      return res.status(400).json({
+        success: false,
+        error: "Missing required fields (brand, model, year, price, fuelType)"
       });
     }
 
@@ -231,7 +240,6 @@ app.put("/api/cars/:id", requireAuth, async (req, res) => {
     const body = req.body || {};
     const updates = {};
 
-    // All fields that can be updated
     if (body.brand !== undefined) updates.brand = String(body.brand).substring(0, 64);
     if (body.model !== undefined) updates.model = String(body.model).substring(0, 64);
     if (body.year !== undefined) updates.year = parseInt(body.year, 10);
@@ -279,7 +287,8 @@ app.post("/api/upload", requireAuth, upload.single("image"), async (req, res) =>
     res.json({ success: true, imageUrl: uploaded.url, id: uploaded.id });
   } catch (err) {
     cleanupFiles(req.file);
-    res.status(500).json({ success: false, error: err.message });
+    console.error("Upload single error:", err && err.message ? err.message : err);
+    res.status(500).json({ success: false, error: err.message || "Upload failed" });
   }
 });
 
@@ -293,48 +302,47 @@ app.post("/api/upload-multiple", requireAuth, upload.array("images", 10), async 
     for (const f of req.files) {
       try {
         const upl = await uploadOneToAppwrite(f.path, f.originalname);
-        results.push({ 
-          success: true, 
-          id: upl.id, 
-          url: upl.url, 
-          name: upl.name 
+        results.push({
+          success: true,
+          id: upl.id,
+          url: upl.url,
+          name: upl.name
         });
         console.log(`✅ Uploaded: ${f.originalname} -> ${upl.url}`);
       } catch (e) {
-        results.push({ 
-          success: false, 
-          name: f.originalname, 
-          error: e.message 
+        results.push({
+          success: false,
+          name: f.originalname,
+          error: e && e.message ? e.message : String(e)
         });
-        console.error(`❌ Failed to upload: ${f.originalname}`, e.message);
+        console.error(`❌ Failed to upload: ${f.originalname}`, e && e.message ? e.message : e);
       }
     }
 
-    // Count successful uploads
     const successfulUploads = results.filter(r => r.success === true).length;
     const failedUploads = results.filter(r => r.success === false).length;
-    
+
     console.log(`📊 Upload summary: ${successfulUploads} successful, ${failedUploads} failed`);
 
     cleanupFiles(req.files);
-    
-    res.json({ 
-      success: true, 
+
+    res.json({
+      success: true,
       total: results.length,
       successful: successfulUploads,
       failed: failedUploads,
-      files: results 
+      files: results
     });
   } catch (err) {
-    console.error("❌ Upload multiple error:", err);
+    console.error("❌ Upload multiple error:", err && err.message ? err.message : err);
     cleanupFiles(req.files);
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: err.message || "Upload multiple failed" });
   }
 });
 
 /* ====== Error / 404 handlers ====== */
 app.use((err, req, res, next) => {
-  console.error("❌ Unhandled error:", err);
+  console.error("❌ Unhandled error:", err && err.stack ? err.stack : err);
   res.status(500).json({ success: false, error: "Internal server error" });
 });
 

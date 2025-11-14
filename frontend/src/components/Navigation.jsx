@@ -9,7 +9,8 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Cars", path: "/cars" },
+    { name: "Cars", path: "/cars-static" },
+    // { name: "Cars", path: "/cars" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
   ];

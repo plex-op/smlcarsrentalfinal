@@ -11,12 +11,16 @@ import {
 import AdminDashboard from "./admin/Admindashboard";
 import Login from "./admin/Login";
 import Home from "./pages/Home";
-import Cars from "./pages/Cars";
-import CarDetails from "./pages/CarDetails"; // ADD THIS IMPORT
+// import Cars from "./pages/Cars";
+// import CarDetails from "./pages/CarDetails";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
+
+// ⭐ ADD STATIC PAGES IMPORTS
+import CarsStatic from "./pages/CarsStatic";
+import CarDetailsStatic from "./pages/CarDetailStatic";
 
 /* ---------- helpers ---------- */
 function safeValidateJWT(token) {
@@ -33,7 +37,9 @@ function safeValidateJWT(token) {
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return null;
 }
 
@@ -62,17 +68,19 @@ function AppContent() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // bootstrap auth (and re-check on route change in case another tab logs out)
   useEffect(() => {
     const token = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
 
     if (token && savedUser && safeValidateJWT(token)) {
       setIsAuthenticated(true);
-      try { setUser(JSON.parse(savedUser)); } catch { setUser(null); }
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch {
+        setUser(null);
+      }
       if (location.pathname === "/login") navigate("/admin", { replace: true });
     } else {
-      // clear any invalid cache
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       setIsAuthenticated(false);
@@ -98,7 +106,6 @@ function AppContent() {
     navigate("/", { replace: true });
   };
 
-  // Hide chrome on login if you prefer (toggle this)
   const hideChrome = location.pathname === "/login";
 
   if (loading) {
@@ -112,17 +119,29 @@ function AppContent() {
   return (
     <div className="min-h-screen flex flex-col">
       {!hideChrome && (
-        <Navigation isAuthenticated={isAuthenticated} user={user} onLogout={logout} />
+        <Navigation
+          isAuthenticated={isAuthenticated}
+          user={user}
+          onLogout={logout}
+        />
       )}
 
       <main className="flex-1">
         <Routes>
+          {/* User pages */}
           <Route path="/" element={<Home />} />
-          <Route path="/cars" element={<Cars />} />
-          <Route path="/car/:carId" element={<CarDetails />} /> {/* ADD THIS ROUTE */}
+          {/* <Route path="/cars" element={<Cars />} /> */}
+          {/* <Route path="/car/:carId" element={<CarDetails />} /> */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
 
+          {/* ⭐ STATIC CAR ROUTES */}
+          <Route path="/cars-static" element={<CarsStatic />} />
+          {/* <Route path="/car-static/:id" element={<CarDetailsStatic />} /> */}
+          <Route path="/car-static/:carId" element={<CarDetailsStatic />} />
+
+
+          {/* Admin protected route */}
           <Route
             path="/admin"
             element={
@@ -132,14 +151,19 @@ function AppContent() {
             }
           />
 
+          {/* Login */}
           <Route
             path="/login"
             element={
-              isAuthenticated ? <Navigate to="/admin" replace /> : <Login onLogin={handleLogin} />
+              isAuthenticated ? (
+                <Navigate to="/admin" replace />
+              ) : (
+                <Login onLogin={handleLogin} />
+              )
             }
           />
 
-          {/* catch-all */}
+          {/* Default redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
