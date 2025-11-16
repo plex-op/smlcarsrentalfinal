@@ -44,7 +44,7 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
 
             {/* WhatsApp Sell Car Button */}
             <a
-              href="https://wa.me/919876543210?text=I%20want%20to%20sell%20my%20car"
+              href="https://wa.link/pzu1wz"
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-all shadow-sm flex items-center gap-2"
@@ -134,7 +134,7 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
 
               {/* Mobile Sell Car Button */}
               <a
-                href="https://wa.me/919876543210?text=I%20want%20to%20sell%20my%20car"
+                href="https://wa.link/pzu1wz"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsMobileOpen(false)}
