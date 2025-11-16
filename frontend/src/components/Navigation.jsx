@@ -10,7 +10,6 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Cars", path: "/cars-static" },
-    // { name: "Cars", path: "/cars" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
   ];
@@ -28,6 +27,7 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
+
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -41,6 +41,24 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
                 {link.name}
               </Link>
             ))}
+
+            {/* WhatsApp Sell Car Button */}
+            <a
+              href="https://wa.me/919876543210?text=I%20want%20to%20sell%20my%20car"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-all shadow-sm flex items-center gap-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                className="w-4 h-4"
+              >
+                <path d="M20.52 3.48A11.8 11.8 0 0 0 12.04 0C5.55 0 .29 5.26.29 11.74c0 2.07.54 4.1 1.57 5.9L0 24l6.53-1.7a11.74 11.74 0 0 0 5.5 1.4h.02c6.48 0 11.74-5.26 11.74-11.74 0-3.14-1.22-6.09-3.47-8.38zM12.02 21.3h-.02a9.57 9.57 0 0 1-4.86-1.32l-.35-.2-3.87 1.01 1.04-3.77-.23-.39a9.56 9.56 0 0 1-1.48-5.12c0-5.27 4.29-9.56 9.58-9.56 2.55 0 4.95 1 6.76 2.8a9.48 9.48 0 0 1 2.81 6.75c0 5.27-4.29 9.56-9.58 9.56zm5.43-7.23c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.29-.77.97-.95 1.17-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.29-.02-.45.13-.6.13-.13.3-.35.45-.52.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.29-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.2 3.07.15.2 2.09 3.2 5.07 4.49.71.31 1.26.5 1.7.64.72.23 1.37.2 1.88.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.31.17-1.42-.07-.1-.27-.17-.57-.32z" />
+              </svg>
+              Want to Sell Your Car?
+            </a>
 
             {/* Admin Section */}
             {isAuthenticated ? (
@@ -113,6 +131,25 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
                   {link.name}
                 </Link>
               ))}
+
+              {/* Mobile Sell Car Button */}
+              <a
+                href="https://wa.me/919876543210?text=I%20want%20to%20sell%20my%20car"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMobileOpen(false)}
+                className="w-full bg-green-600 text-white py-2 rounded-lg text-sm font-medium text-center hover:bg-green-700 transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4"
+                >
+                  <path d="M20.52 3.48A11.8 11.8 0 0 0 12.04 0C5.55 0 .29 5.26.29 11.74c0 2.07.54 4.1 1.57 5.9L0 24l6.53-1.7a11.74 11.74 0 0 0 5.5 1.4h.02c6.48 0 11.74-5.26 11.74-11.74 0-3.14-1.22-6.09-3.47-8.38zM12.02 21.3h-.02a9.57 9.57 0 0 1-4.86-1.32l-.35-.2-3.87 1.01 1.04-3.77-.23-.39a9.56 9.56 0 0 1-1.48-5.12c0-5.27 4.29-9.56 9.58-9.56 2.55 0 4.95 1 6.76 2.8a9.48 9.48 0 0 1 2.81 6.75c0 5.27-4.29 9.56-9.58 9.56zm5.43-7.23c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.29-.77.97-.95 1.17-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.29-.02-.45.13-.6.13-.13.3-.35.45-.52.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.29-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.2 3.07.15.2 2.09 3.2 5.07 4.49.71.31 1.26.5 1.7.64.72.23 1.37.2 1.88.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.31.17-1.42-.07-.1-.27-.17-.57-.32z" />
+                </svg>
+                Want to Sell Your Car?
+              </a>
 
               {isAuthenticated ? (
                 <div className="pt-3 border-t border-blue-100 space-y-3">
