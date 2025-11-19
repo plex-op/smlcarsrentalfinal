@@ -23,12 +23,12 @@ const Contact = () => {
     {
       icon: <Phone className="w-6 h-6 text-[#0056B3]" />,
       title: "Call Us",
-      desc: "+91 63841 84188",
+      desc: "+91 7418036838",
     },
     {
       icon: <Mail className="w-6 h-6 text-[#0056B3]" />,
       title: "Email Us",
-      desc: "info@premiumauto.com",
+      desc: "smlcars4u@gmail.com",
     },
   ];
 
