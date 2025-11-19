@@ -25,11 +25,10 @@ const About = () => {
   ];
 
   const milestones = [
-    { year: "1934", event: "SML Cars Founded" },
-    { year: "1970", event: "Expanded to 5 Locations" },
-    { year: "1995", event: "Introduced Quality Certification" },
-    { year: "2010", event: "Reached 1000+ Happy Customers" },
-    { year: "2024", event: "Celebrating 15+ Years of Excellence" },
+    { year: "2010", event: "SML Cars Founded" },
+    { year: "2015", event: "Introduced Quality Certification" },
+    { year: "2020", event: "Reached 1000+ Happy Customers" },
+    { year: "2025", event: "Celebrating 15+ Years of Excellence" },
   ];
 
   const achievements = [
