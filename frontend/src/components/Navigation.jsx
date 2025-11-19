@@ -93,14 +93,14 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
                 </button>
               </div>
             ) : (
-              <Link
-                to="/login"
-                className={`px-5 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-sm ${
-                  isActive("/login") ? "ring-2 ring-blue-300" : ""
-                }`}
-              >
-                Admin Login
-              </Link>
+              // <Link
+              //   to="/login"
+              //   className={`px-5 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-sm ${
+              //     isActive("/login") ? "ring-2 ring-blue-300" : ""
+              //   }`}
+              // >
+              //   Admin Login
+              // </Link>
             )}
           </div>
 
@@ -186,13 +186,13 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
                   </button>
                 </div>
               ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setIsMobileOpen(false)}
-                  className="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-medium text-center hover:bg-blue-700 transition-all shadow-sm"
-                >
-                  Admin Login
-                </Link>
+                // <Link
+                //   to="/login"
+                //   onClick={() => setIsMobileOpen(false)}
+                //   className="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-medium text-center hover:bg-blue-700 transition-all shadow-sm"
+                // >
+                //   Admin Login
+                // </Link>
               )}
             </div>
           </div>
