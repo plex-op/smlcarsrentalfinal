@@ -67,7 +67,7 @@ const About = () => {
               <p>
                 Welcome to{" "}
                 <span className="text-[#00AEEF] font-semibold">SML Cars</span>,
-                your trusted partner in finding the perfect vehicle. Since 1934,
+                your trusted partner in finding the perfect vehicle. Since 2010,
                 we've been serving with dedication, transparency, and integrity.
               </p>
               <p>
