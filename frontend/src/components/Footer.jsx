@@ -53,7 +53,7 @@ const Footer = () => {
                   href="tel:+916384184188"
                   className="text-[#00AEEF] hover:text-[#0056B3] transition-colors"
                 >
-                  +91 63841 84188
+                  +91 7418036838
                 </a>
               </li>
               <li>
@@ -62,7 +62,7 @@ const Footer = () => {
                   href="mailto:info@premiumauto.com"
                   className="text-[#00AEEF] hover:text-[#0056B3] transition-colors"
                 >
-                  info@premiumauto.com
+                  smlcars4u@gmail.com
                 </a>
               </li>
               <li className="text-gray-400">Mon–Sun: 9:00 AM – 8:00 PM</li>
